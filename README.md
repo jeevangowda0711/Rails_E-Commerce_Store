@@ -60,22 +60,27 @@ Visit: [http://localhost:3000](http://localhost:3000)
 ### Day 2 — Product Experience, Notifications, Testing, and Deployment Prep
 
 * Added fragment caching for product show (dev cache toggle)
-* Added rich text `description` (Action Text)
-* Added `featured_image` uploads (Active Storage)
-* Added basic styling via Propshaft (CSS) and reviewed import maps / Hotwire
-* Added I18n with locale switching via `?locale=` and translated index title
-* Added inventory tracking (`inventory_count`) + validation (no negatives)
-* Built subscriber flow for out-of-stock products (nested routes + flash notice)
-* Implemented “back in stock” emails with Action Mailer (`deliver_later`)
-* Added notification logic (callback) and extracted to a Concern (`Product::Notifications`)
-* Added unsubscribe via signed token + UnsubscribesController + email links
-* Added tests:
+* Added rich text `description` (Action Text) + image uploads (Active Storage)
+* Added inventory tracking + subscriptions + in-stock email notifications
+* Added unsubscribe via signed token
+* Added tests (mailer + inventory notification), verified RuboCop + Brakeman
+* Noted CI (GitHub Actions) + deployment workflow (Kamal + Solid Queue)
 
-  * emails sent when inventory goes from 0 → positive
-  * mailer test coverage
-  * fixtures for products/subscribers
-* Verified code quality/security: RuboCop + Brakeman
-* Noted CI with GitHub Actions + deployment workflow with Kamal (including Solid Queue guidance)
+### Day 3 — Sign Up and Settings (in progress)
+
+* Added `first_name` and `last_name` to `User` (+ validations + `full_name`)
+* Implemented Sign Up flow (`/sign_up`) with controller + form
+* Restricted Sign Up to unauthenticated users only (`unauthenticated_access_only`)
+* Added rate limiting for Sign Up POSTs
+* Added Settings namespace:
+
+  * Password settings at `/settings/password` (show + update)
+  * Profile settings at `/settings/profile` (show + update)
+  * Settings root redirects to profile
+* Added nested Settings layout (`layouts/settings`) with sidebar navigation
+* Refactored Settings controllers to inherit from `Settings::BaseController` (shared `layout "settings"`)
+* Updated main navbar to show Settings / Logout when authenticated and Sign Up / Login when not
+* Updated CSS selectors (`nav.navbar`) and added sidebar styles for Settings layout
 
 ---
 
