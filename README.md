@@ -82,6 +82,28 @@ Visit: [http://localhost:3000](http://localhost:3000)
 * Updated main navbar to show Settings / Logout when authenticated and Sign Up / Login when not
 * Updated CSS selectors (`nav.navbar`) and added sidebar styles for Settings layout
 
+### Day 4 — Accounts, Admin Roles, and Store/Admin Separation
+
+- Added account deletion under Settings (`/settings/account`)
+- Added email change flow with confirmation:
+  - `unconfirmed_email` field
+  - email verification via signed token
+  - Email confirmation controller + mailer
+- Introduced admin role:
+  - `admin` flag on users
+  - protected via `attr_readonly`
+  - admin-only access guard via Authorization concern
+- Added admin-only Users management:
+  - Store namespace (`/store/users`)
+  - Admin CRUD for users
+  - Admin-only navigation in Settings sidebar
+- Separated Products into public vs admin concerns:
+  - Public `ProductsController` (index/show only)
+  - Admin `Store::ProductsController` with full CRUD
+- Refactored routes, controllers, and views to use namespaces cleanly
+- Updated translations to support store/admin namespaces
+- Cleaned up storefront views to remove admin-only actions
+
 ---
 
 ## Purpose
