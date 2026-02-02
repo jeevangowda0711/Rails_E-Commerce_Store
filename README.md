@@ -104,6 +104,32 @@ Visit: [http://localhost:3000](http://localhost:3000)
 - Updated translations to support store/admin namespaces
 - Cleaned up storefront views to remove admin-only actions
 
+### Day 5 — Test Coverage for Auth, Email Confirmation, and Admin Access
+
+- Added session authentication test helper (`sign_in_as`, `sign_out`) for integration/controller tests
+- Added Sign Up controller tests:
+  - renders sign up page
+  - redirects when already authenticated
+  - creates user on valid params
+  - rejects invalid submissions (422)
+  - ignores `admin` attribute to prevent privilege escalation
+- Added Settings Email controller tests:
+  - validates current password for email change
+  - enqueues email confirmation on success
+  - ensures `unconfirmed_email` persists correctly
+- Added Email Confirmation controller tests:
+  - rejects invalid tokens gracefully
+  - confirms email change with valid token and clears `unconfirmed_email`
+- Updated `UserMailer` test to validate confirmation email output
+- Added integration tests for Settings sidebar:
+  - regular users do not see Store Settings
+  - admins see Store Settings
+  - regular users are blocked from `/store/products` and `/store/users`
+  - admins can access `/store/products` and `/store/users`
+- Updated user fixtures to include names and an admin user
+- Verified full test suite passes (`bin/rails test`)
+
+
 ---
 
 ## Purpose

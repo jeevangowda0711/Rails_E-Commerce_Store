@@ -4,7 +4,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   setup { @user = User.take }
 
   test "new" do
-    get new_password_path
+    get new_passwords_path
     assert_response :success
   end
 
@@ -27,13 +27,13 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "edit" do
-    get edit_password_path(@user.password_reset_token)
+    get edit_passwords_path(token: @user.password_reset_token)
     assert_response :success
   end
 
   test "edit with invalid password reset token" do
-    get edit_password_path("invalid token")
-    assert_redirected_to new_password_path
+    get edit_passwords_path(token: "invalid token")
+    assert_redirected_to new_passwords_path
 
     follow_redirect!
     assert_notice "reset link is invalid"
@@ -41,7 +41,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
 
   test "update" do
     assert_changes -> { @user.reload.password_digest } do
-      put password_path(@user.password_reset_token), params: { password: "new", password_confirmation: "new" }
+      put passwords_path(token: @user.password_reset_token), params: { password: "Password123!", password_confirmation: "Password123!" }
       assert_redirected_to new_session_path
     end
 
@@ -52,8 +52,8 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
   test "update with non matching passwords" do
     token = @user.password_reset_token
     assert_no_changes -> { @user.reload.password_digest } do
-      put password_path(token), params: { password: "no", password_confirmation: "match" }
-      assert_redirected_to edit_password_path(token)
+      put passwords_path(token: token), params: { password: "Password123!", password_confirmation: "Mismatch123!" }
+      assert_redirected_to edit_passwords_path(token: token)
     end
 
     follow_redirect!
