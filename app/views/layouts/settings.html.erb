@@ -1,26 +1,30 @@
 <%# /app/views/layouts/settings.html.erb %>
 <%= content_for :content do %>
-    <section class="settings">
-        <nav>
-            <h4>Account Settings</h4>
-            <%= link_to "Profile", settings_profile_path %>
-            <%= link_to "Email", settings_email_path%>
-            <%= link_to "Password", settings_password_path %>
-            <%= link_to "Account", settings_user_path %>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 bg-white rounded-2xl border border-slate-200 shadow-sm p-6 min-h-[600px]">
+    <aside class="md:col-span-1 border-r border-slate-100 pr-4">
+      <nav class="sticky top-24 space-y-1">
+        <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2 px-3">Account Settings</h4>
+        <%= link_to "Profile", settings_profile_path, class: "block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition #{current_page?(settings_profile_path) ? 'bg-slate-50 text-indigo-600' : ''}" %>
+        <%= link_to "Email", settings_email_path, class: "block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition #{current_page?(settings_email_path) ? 'bg-slate-50 text-indigo-600' : ''}" %>
+        <%= link_to "Password", settings_password_path, class: "block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition #{current_page?(settings_password_path) ? 'bg-slate-50 text-indigo-600' : ''}" %>
+        <%= link_to "Account", settings_user_path, class: "block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition #{current_page?(settings_user_path) ? 'bg-slate-50 text-indigo-600' : ''}" %>
 
-            <% if Current.user.admin? %>
-                <h4>Store Settings</h4>
-                <%= link_to "Products", store_products_path %>
-                <%= link_to "Users", store_users_path %>
-                <%= link_to "Subscribers", store_subscribers_path %>
-                <%= link_to "Wishlists", store_wishlists_path %>
-            <% end %>
-        </nav>
+        <% if Current.user.admin? %>
+          <div class="pt-6">
+            <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2 px-3">Store Settings</h4>
+            <%= link_to "Products", store_products_path, class: "block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition #{request.path.start_with?(store_products_path) ? 'bg-slate-50 text-indigo-600' : ''}" %>
+            <%= link_to "Users", store_users_path, class: "block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition #{request.path.start_with?(store_users_path) ? 'bg-slate-50 text-indigo-600' : ''}" %>
+            <%= link_to "Subscribers", store_subscribers_path, class: "block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition #{request.path.start_with?(store_subscribers_path) ? 'bg-slate-50 text-indigo-600' : ''}" %>
+            <%= link_to "Wishlists", store_wishlists_path, class: "block rounded-xl px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-indigo-600 transition #{request.path.start_with?(store_wishlists_path) ? 'bg-slate-50 text-indigo-600' : ''}" %>
+          </div>
+        <% end %>
+      </nav>
+    </aside>
 
-        <div>
-            <%= yield %>
-        </div>
-    </section>
+    <div class="md:col-span-3 pl-4">
+      <%= yield %>
+    </div>
+  </div>
 <% end %>
 
 <%= render template: "layouts/application" %>

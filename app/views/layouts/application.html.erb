@@ -19,28 +19,39 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <%= stylesheet_link_tag :tailwind, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <div class="notice"><%= flash[:notice] %></div>
-    <div class="alert"><%= flash[:alert] %></div>
-    <nav class="navbar">
-      <%= link_to "Home", root_path %>
-      <div class="nav-actions">
-        <% if authenticated? %>
-          <%= link_to "Wishlists", wishlists_path %>
-          <%= link_to "Settings", settings_root_path %>
-          <%= link_to "Log out", session_path, data: { turbo_method: :delete } %>
-        <% else %>
-          <%= link_to "Sign up", sign_up_path %>
-          <%= link_to "Log in", new_session_path %>
-        <% end %>
+  <body class="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased">
+    <nav class="sticky top-0 z-40 backdrop-blur bg-white/80 border-b border-slate-200">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+          <div class="flex-shrink-0">
+            <%= link_to "Store", root_path, class: "text-xl font-bold text-slate-900 tracking-tight" %>
+          </div>
+          <div class="flex items-center gap-4">
+            <%= link_to "Home", root_path, class: "text-sm font-medium text-slate-600 hover:text-indigo-600 transition" %>
+            
+            <% if authenticated? %>
+              <%= link_to "Wishlists", wishlists_path, class: "text-sm font-medium text-slate-600 hover:text-indigo-600 transition" %>
+              <%= link_to "Settings", settings_root_path, class: "text-sm font-medium text-slate-600 hover:text-indigo-600 transition" %>
+              <%= link_to "Log out", session_path, data: { turbo_method: :delete }, class: "inline-flex items-center rounded-xl bg-slate-900 text-white px-4 py-2 text-sm font-semibold hover:bg-slate-800 transition active:scale-[0.98]" %>
+            <% else %>
+              <%= link_to "Sign up", sign_up_path, class: "text-sm font-medium text-slate-600 hover:text-indigo-600 transition" %>
+              <%= link_to "Log in", new_session_path, class: "ml-2 inline-flex items-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 transition active:scale-[0.98]" %>
+            <% end %>
+          </div>
+        </div>
       </div>
     </nav>
     
-    <main>
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <%= render "shared/flash" %>
       <%= content_for?(:content) ? yield(:content) : yield %>
     </main>
   </body>

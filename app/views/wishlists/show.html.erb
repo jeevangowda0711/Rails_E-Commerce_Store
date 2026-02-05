@@ -1,27 +1,61 @@
 <%# app/views/wishlists/show.html.erb %>
-<h1><%= @wishlist.name %></h1>
-<% if authenticated? && @wishlist.user == Current.user %>
-  <%= link_to "Edit", edit_wishlist_path(@wishlist) %>
-  <%= button_to "Delete", @wishlist, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
-<% end %>
-
-<%= tag.button "Copy to clipboard", data: { controller: :clipboard, action: "clipboard#copy", clipboard_text_value: wishlist_url(@wishlist) } %>
-
-<h3><%= pluralize @wishlist.products_count, "Product" %></h3>
-<% @wishlist.wishlist_products.includes(:product).each do %>
-  <div>
-    <%= link_to it.product.name, it.product %>
-    <small>Added <%= l it.created_at, format: :long %></small>
-
-    <% if authenticated? && @wishlist.user == Current.user %>
-        <% if (other_wishlists = Current.user.wishlists.excluding(@wishlist)) && other_wishlists.any? %>
-            <%= form_with url: [ @wishlist, it ], method: :patch do |form| %>
-                <%= form.collection_select :new_wishlist_id, other_wishlists, :id, :name %>
-                <%= form.submit "Move" %>
+<div class="mb-8">
+    <div class="md:flex md:items-center md:justify-between">
+        <h1 class="text-3xl font-bold tracking-tight text-slate-900"><%= @wishlist.name %></h1>
+        
+        <div class="mt-4 flex gap-3 md:mt-0">
+             <%= tag.button "Copy Link", class: button_classes(:secondary), data: { controller: :clipboard, action: "clipboard#copy", clipboard_text_value: wishlist_url(@wishlist) } %>
+             
+            <% if authenticated? && @wishlist.user == Current.user %>
+                <%= link_to "Edit", edit_wishlist_path(@wishlist), class: button_classes(:secondary) %>
+                <%= button_to "Delete", @wishlist, method: :delete, data: { turbo_confirm: "Are you sure?" }, class: button_classes(:danger) %>
             <% end %>
-        <% end %>
+        </div>
+    </div>
+</div>
 
-      <%= button_to "Remove", [ @wishlist, it ], method: :delete, data: { turbo_confirm: "Are you sure?" } %>
-    <% end %>
-  </div>
-<% end %>
+<div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+        <h3 class="text-sm font-semibold text-slate-900 uppercase tracking-wide"><%= pluralize @wishlist.products_count, "Product" %></h3>
+    </div>
+    
+    <ul class="divide-y divide-slate-200">
+        <% @wishlist.wishlist_products.includes(:product).each do |item| %>
+            <li class="p-6 sm:flex sm:items-center sm:justify-between hover:bg-slate-50 transition">
+                <div class="flex items-center gap-4">
+                     <% if item.product.featured_image.attached? %>
+                        <%= image_tag item.product.featured_image, class: "h-16 w-16 rounded-lg object-cover bg-slate-100" %>
+                     <% else %>
+                        <div class="h-16 w-16 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400">
+                             <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        </div>
+                     <% end %>
+                     
+                     <div>
+                        <%= link_to item.product.name, item.product, class: "text-lg font-medium text-slate-900 hover:text-indigo-600 transition" %>
+                        <p class="text-sm text-slate-500">Added <%= l item.created_at, format: :long %></p>
+                     </div>
+                </div>
+                
+                <% if authenticated? && @wishlist.user == Current.user %>
+                    <div class="mt-4 flex items-center gap-4 sm:mt-0">
+                         <% if (other_wishlists = Current.user.wishlists.excluding(@wishlist)) && other_wishlists.any? %>
+                            <%= form_with url: [ @wishlist, item ], method: :patch, class: "flex items-center gap-2" do |form| %>
+                                <%= form.collection_select :new_wishlist_id, other_wishlists, :id, :name, {}, class: "block w-32 rounded-lg border-slate-200 py-1.5 pl-3 pr-8 text-xs focus:border-indigo-500 focus:ring-indigo-500" %>
+                                <%= form.submit "Move", class: "text-xs font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer" %>
+                            <% end %>
+                        <% end %>
+                        
+                        <%= button_to "Remove", [ @wishlist, item ], method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "text-sm font-medium text-rose-600 hover:text-rose-500" %>
+                    </div>
+                <% end %>
+            </li>
+        <% end %>
+        
+        <% if @wishlist.products_count.zero? %>
+            <li class="p-12 text-center text-slate-500">
+                This wishlist is empty. <%= link_to "Browse products", products_path, class: "text-indigo-600 font-medium hover:underline" %> to add some.
+            </li>
+        <% end %>
+    </ul>
+</div>

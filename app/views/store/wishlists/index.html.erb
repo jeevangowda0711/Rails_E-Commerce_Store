@@ -1,11 +1,24 @@
-<%# app/views/store/wishlists/index.html.erb %>
-<h1>Wishlists</h1>
-<h1><%= pluralize @wishlists.count, "Wishlist" %></h1>
+<div class="sm:flex sm:items-center justify-between">
+    <div class="sm:flex-auto">
+        <h1 class="text-xl font-semibold text-slate-900">Wishlists</h1>
+        <p class="mt-2 text-sm text-slate-700">Manage all customer wishlists. <%= pluralize @wishlists.count, "wishlist" %> found.</p>
+    </div>
+</div>
 
-<%= form_with url: store_wishlists_path, method: :get do |form| %>
-  <%= form.collection_select :user_id, User.all, :id, :full_name, selected: params[:user_id], include_blank: "All Users" %>
-  <%= form.collection_select :product_id, Product.all, :id, :name, selected: params[:product_id], include_blank: "All Products" %>
-  <%= form.submit "Filter" %>
-<% end %>
+<div class="mt-6 bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+    <%= form_with url: store_wishlists_path, method: :get, class: "flex flex-col sm:flex-row gap-4 items-end" do |form| %>
+        <div class="w-full sm:w-auto">
+            <%= form.collection_select :user_id, User.all, :id, :full_name, { selected: params[:user_id], include_blank: "All Users" }, { class: "block w-full rounded-xl border-slate-200 py-2 pl-3 pr-10 text-sm focus:border-indigo-500 focus:ring-indigo-500" } %>
+        </div>
+        <div class="w-full sm:w-auto">
+             <%= form.collection_select :product_id, Product.all, :id, :name, { selected: params[:product_id], include_blank: "All Products" }, { class: "block w-full rounded-xl border-slate-200 py-2 pl-3 pr-10 text-sm focus:border-indigo-500 focus:ring-indigo-500" } %>
+        </div>
+        <div class="w-full sm:w-auto">
+            <%= form.submit "Filter", class: button_classes(:secondary) %>
+        </div>
+    <% end %>
+</div>
 
-<%= render @wishlists %>
+<div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <%= render @wishlists %>
+</div>

@@ -1,0 +1,19 @@
+<% flash.each do |type, message| %>
+  <% 
+    color_classes = case type.to_sym
+      when :notice then "bg-emerald-50 text-emerald-700 border-emerald-200"
+      when :alert then "bg-rose-50 text-rose-700 border-rose-200"
+      else "bg-slate-50 text-slate-700 border-slate-200"
+    end
+  %>
+  <div class="mb-4 rounded-xl border px-4 py-3 shadow-sm <%= color_classes %>" role="alert">
+    <div class="flex items-center justify-between">
+      <div class="text-sm font-medium"><%= message %></div>
+      <button type="button" class="ml-auto inline-flex items-center p-1.5 rounded-md hover:bg-black/5 transition" onclick="this.closest('[role=\'alert\']').remove()">
+        <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L10 8.586 5.707 4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+<% end %>

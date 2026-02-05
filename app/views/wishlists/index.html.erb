@@ -1,4 +1,9 @@
 <%# app/views/wishlists/index.html.erb %>
-<h1>Your Wishlists</h1>
-<%= link_to "Create a wishlist", new_wishlist_path %>
-<%= render @wishlists %>
+<div class="md:flex md:items-center md:justify-between mb-8">
+    <h1 class="text-3xl font-bold tracking-tight text-slate-900">Your Wishlists</h1>
+    <%= link_to "Create a wishlist", new_wishlist_path, class: button_classes(:primary) %>
+</div>
+
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <%= render @wishlists %>
+</div>

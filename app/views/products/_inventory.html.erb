@@ -1,13 +1,23 @@
 <%# app/views/products/_inventory.html.erb %>
-
-<% if product.inventory_count.positive? %>
-    <p><%= product.inventory_count %> in stock</p>
-<% else %>
-    <p>Out of Stock</p>
-    <p>Email me when available</p>
-
-    <%= form_with model: [product, Subscriber.new] do |form| %>
-        <%= form.email_field :email, placeholder: "you@example.com", required: true %>
-        <%= form.submit %>
+<div class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+    <h3 class="text-sm font-medium text-slate-900">Availability</h3>
+    
+    <% if product.inventory_count.positive? %>
+        <div class="mt-2 flex items-center">
+            <div class="h-2.5 w-2.5 rounded-full bg-emerald-500 mr-2"></div>
+            <p class="text-sm text-slate-700">In stock (<%= product.inventory_count %> available)</p>
+        </div>
+    <% else %>
+        <div class="mt-2 flex items-center mb-4">
+             <div class="h-2.5 w-2.5 rounded-full bg-rose-500 mr-2"></div>
+             <p class="text-sm text-rose-600 font-medium">Out of stock</p>
+        </div>
+        
+        <p class="text-sm text-slate-500 mb-3">Notify me when available:</p>
+        
+        <%= form_with model: [product, Subscriber.new], class: "flex gap-2" do |form| %>
+            <%= form.email_field :email, placeholder: "you@example.com", required: true, class: "block w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" %>
+            <%= form.submit "Notify Me", class: button_classes(:secondary) %>
+        <% end %>
     <% end %>
-<% end %>
+</div>

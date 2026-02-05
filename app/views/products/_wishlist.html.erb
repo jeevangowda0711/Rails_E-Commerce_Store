@@ -1,16 +1,18 @@
 <%# app/views/products/_wishlist.html.erb %>
-<% if authenticated? %>
-  <%= form_with url: product_wishlist_path(product) do |form| %>
-    <% if Current.user.wishlists.any? %>
-      <div>
-        <%= form.collection_select :wishlist_id, Current.user.wishlists, :id, :name %>
-      </div>
-    <% end %>
+<div class="mt-4">
+    <% if authenticated? %>
+        <%= form_with url: product_wishlist_path(product), class: "space-y-3" do |form| %>
+            <% if Current.user.wishlists.any? %>
+            <div>
+                <%= form.collection_select :wishlist_id, Current.user.wishlists, :id, :name, {}, class: "block w-full rounded-xl border-slate-200 py-2.5 pl-3 pr-10 text-sm focus:border-indigo-500 focus:ring-indigo-500" %>
+            </div>
+            <% end %>
 
-    <div>
-      <%= form.submit "Add to wishlist" %>
-    </div>
-  <% end %>
-<% else %>
-  <%= link_to "Add to wishlist", sign_up_path %>
-<% end %>
+            <div>
+                <%= form.submit "Add to Wishlist", class: "w-full " + button_classes(:primary) %>
+            </div>
+        <% end %>
+    <% else %>
+        <%= link_to "Sign in to add to Wishlist", new_session_path, class: "w-full " + button_classes(:secondary) %>
+    <% end %>
+</div>

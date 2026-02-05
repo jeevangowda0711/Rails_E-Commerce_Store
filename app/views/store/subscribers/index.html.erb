@@ -1,9 +1,31 @@
-<%# app/views/store/subscribers/index.html.erb %>
-<h1><%= pluralize @subscribers.count, "Subscriber" %></h1>
+<div class="sm:flex sm:items-center justify-between">
+    <div class="sm:flex-auto">
+        <h1 class="text-xl font-semibold text-slate-900">Subscribers</h1>
+        <p class="mt-2 text-sm text-slate-700">Notification requests for products. <%= pluralize @subscribers.count, "subscriber" %> found.</p>
+    </div>
+</div>
 
-<%= form_with url: store_subscribers_path, method: :get do |form| %>
-  <%= form.collection_select :product_id, Product.all, :id, :name, selected: params[:product_id], include_blank: "All Products" %>
-  <%= form.submit "Filter" %>
-<% end %>
+<div class="mt-6 bg-white rounded-lg border border-slate-200 p-4 shadow-sm">
+    <%= form_with url: store_subscribers_path, method: :get, class: "flex flex-col sm:flex-row gap-4 items-end" do |form| %>
+        <div class="w-full sm:w-auto">
+             <%= form.collection_select :product_id, Product.all, :id, :name, { selected: params[:product_id], include_blank: "All Products" }, { class: "block w-full rounded-xl border-slate-200 py-2 pl-3 pr-10 text-sm focus:border-indigo-500 focus:ring-indigo-500" } %>
+        </div>
+        <div class="w-full sm:w-auto">
+            <%= form.submit "Filter", class: button_classes(:secondary) %>
+        </div>
+    <% end %>
+</div>
 
-<%= render @subscribers %>
+<div class="mt-8 flow-root">
+    <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+             <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg bg-white">
+                <table class="min-w-full divide-y divide-slate-300">
+                     <tbody class="divide-y divide-slate-200 bg-white">
+                        <%= render @subscribers %>
+                     </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

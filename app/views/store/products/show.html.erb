@@ -1,21 +1,61 @@
-<%# app/views/products/show.html.erb %>
-<%= link_to "Back", store_products_path%>
+<div class="mb-6 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+         <%= link_to store_products_path, class: "inline-flex items-center rounded-full bg-slate-100 p-2 text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition" do %>
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" clip-rule="evenodd" /></svg>
+         <% end %>
+         <h1 class="text-2xl font-bold text-slate-900">Product Details</h1>
+    </div>
+    <div class="flex gap-3">
+        <%= link_to "View Live", @product, class: button_classes(:secondary), target: "_blank" %>
+        <%= link_to "Edit", edit_store_product_path(@product), class: button_classes(:primary) %>
+        <%= button_to "Delete", [ :store, @product ], method: :delete, data: { turbo_confirm: "Are you sure?" }, class: button_classes(:danger) %>
+    </div>
+</div>
 
-<section class="product">
-    <%= image_tag @product.featured_image if @product.featured_image.attached? %>
-    <section class="product-info">
-        <% cache @product do%>
-            <h1><%= @product.name %></h1>
-            <%= @product.description %>
-        <% end %>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <%# Main Info %>
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+             <% if @product.featured_image.attached? %>
+                <div class="aspect-[21/9] w-full bg-slate-100 border-b border-slate-200">
+                     <%= image_tag @product.featured_image, class: "h-full w-full object-cover object-center" %>
+                </div>
+            <% end %>
+            <div class="p-6">
+                 <h2 class="text-xl font-semibold text-slate-900 mb-4"><%= @product.name %></h2>
+                 <div class="prose prose-slate max-w-none">
+                     <%= @product.description %>
+                 </div>
+            </div>
+        </div>
+    </div>
 
-        <%= link_to "View in Storefront", @product %>
-        <%= link_to "Edit", edit_store_product_path(@product) %>
-        <%= button_to "Delete", [ :store, @product ], method: :delete, data: { turbo_confirm: "Are you sure?" } %>
-    </section>
-</section>
+    <%# Sidebar Stats %>
+    <div class="space-y-6">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+            <h3 class="text-sm font-medium text-slate-900 mb-4">Inventory</h3>
+            <div class="flex items-center justify-between">
+                <span class="text-slate-600">Stock Count</span>
+                <span class="text-lg font-semibold text-slate-900"><%= @product.inventory_count %></span>
+            </div>
+        </div>
 
-<section>
-  <%= link_to pluralize(@product.wishlists_count, "wishlist"), store_wishlists_path(product_id: @product) %>
-  <%= link_to pluralize(@product.subscribers.count, "subscriber"), store_subscribers_path(product_id: @product) %>
-</section>
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+            <h3 class="text-sm font-medium text-slate-900 mb-4">Engagement</h3>
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <span class="text-slate-600">Wishlists</span>
+                    <%= link_to store_wishlists_path(product_id: @product), class: "inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition" do %>
+                        <%= pluralize(@product.wishlists_count, "wishlist") %>
+                    <% end %>
+                </div>
+                 <div class="flex items-center justify-between">
+                    <span class="text-slate-600">Subscribers</span>
+                    <%= link_to store_subscribers_path(product_id: @product), class: "inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition" do %>
+                        <%= pluralize(@product.subscribers.count, "subscriber") %>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
