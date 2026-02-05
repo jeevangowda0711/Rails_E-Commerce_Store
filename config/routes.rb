@@ -9,28 +9,20 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
-  # get "products", to: "products#index"
-
-  # get "products/new", to: "products#new"
-  # post "products", to: "products#create"
-
-  # get "products/:id", to: "products#show"
-
-  # get "products/:id/edit", to: "products#edit"
-  # patch "products/:id", to: "products#update"
-  # put "products/:id", to: "products#update"
-
-  # delete "products/:id", to: "products#destroy"
   root "products#index"
   resources :products do
+    resource :wishlist, only: [ :create ], module: :products
     resources :subscribers, only: [ :create ]
   end
+
   resource :unsubscribe, only: [ :show ]
   resource :session
   resource :passwords, param: :token
   resource :sign_up
+
+  resources :wishlists do
+    resources :wishlist_products, only: [ :update, :destroy ], module: :wishlists
+  end
 
   namespace :settings do
     resource :email, only: [ :show, :update ]
@@ -49,6 +41,8 @@ Rails.application.routes.draw do
   namespace :store do
     resources :products
     resources :users
+    resources :wishlists
+    resources :subscribers
 
     root to: redirect("/store/products")
   end

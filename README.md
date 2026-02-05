@@ -129,6 +129,36 @@ Visit: [http://localhost:3000](http://localhost:3000)
 - Updated user fixtures to include names and an admin user
 - Verified full test suite passes (`bin/rails test`)
 
+### Day 6 — Wishlists + Admin Dashboards + Tests
+
+- Implemented **Wishlists** feature:
+  - Added `Wishlist` + `WishlistProduct` models with associations and **counter caches**
+    - `wishlists.products_count`, `products.wishlists_count`
+  - Enforced uniqueness for `(product_id, wishlist_id)` at both DB + model level
+  - Added **friendly URLs** for wishlists using `to_param :name` (shareable links)
+- Built wishlist UX:
+  - Added **“Add to wishlist”** on product show page
+  - Auto-creates a default wishlist (`"My Wishlist"`) if the user has none
+  - Added wishlist CRUD pages (`/wishlists`) and navigation link in navbar
+  - Added **Copy to clipboard** share button using Stimulus (`clipboard_controller.js`)
+  - Added ability to **remove** products and **move** products between wishlists
+- Added admin visibility + insights:
+  - Added **Store::Wishlists** (index/show) with filtering by `user_id` and `product_id`
+  - Refactored filtering into `Wishlist.filter_by(params)` (Fat Model, Skinny Controller)
+  - Added **Store::Subscribers** (index/show/destroy) with product filter via `Subscriber.filter_by`
+  - Added sidebar links for admins: **Products / Users / Subscribers / Wishlists**
+  - Added quick links on admin product page to filtered wishlists/subscribers
+- Added test coverage:
+  - Added fixtures for wishlists, wishlist_products, and additional products
+  - Added model tests for `Wishlist.filter_by` (no filters, user filter, product filter)
+  - Added integration tests for wishlist CRUD + public visibility
+  - Added integration tests for wishlist products:
+    - add to specific wishlist
+    - auto-create wishlist when none exist
+    - prevent adding/moving into other users’ wishlists (404)
+    - moving products + handling duplicates with flash error
+  - Verified all wishlist-related tests pass via `bin/rails test`
+
 
 ---
 

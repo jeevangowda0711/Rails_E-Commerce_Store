@@ -1,0 +1,4 @@
+<%# app/views/store/wishlists/_wishlist.html.erb %>
+<div>
+  <%= link_to wishlist.name, store_wishlist_path(wishlist) %> by <%= link_to wishlist.user.full_name, store_user_path(wishlist.user) %>
+</div>
