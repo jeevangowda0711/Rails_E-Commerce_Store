@@ -19,15 +19,60 @@ This repository is developed in **daily iterations**, with progress tracked belo
 
 ## Features
 
-* Products: full CRUD with validations
-* Authentication: product management restricted to authenticated users
+### Storefront (Public + Authenticated Users)
+* Products browsing: index + show pages (public)
 * Rich product content: description (Action Text) + featured image (Active Storage)
-* Inventory tracking + “back in stock” email notifications
-* Subscribe / unsubscribe flow for out-of-stock products
-* Performance: fragment caching for product show
-* I18n: basic locale switching via query param
-* Quality: tests (mail + inventory notifications), RuboCop, Brakeman
-* Ops: GitHub Actions (lint/security/tests) and deployment notes via Kamal
+* Inventory tracking:
+  * “Out of stock” state
+  * Subscribe form for back-in-stock alerts
+* Email subscription flows:
+  * Subscribe to product availability notifications
+  * Unsubscribe via signed token link
+* Performance: fragment caching on product show
+* I18n: basic locale switching via `?locale=en|es`
+
+### Authentication & User Account
+* Authentication (sessions) with login/logout
+* Sign Up flow (`/sign_up`) with:
+  * first name + last name
+  * rate limiting on Sign Up POSTs
+  * sign up restricted to unauthenticated users only
+* Settings area (nested layout + sidebar navigation):
+  * Profile updates (`/settings/profile`)
+  * Password updates with password challenge (`/settings/password`)
+  * Email change + confirmation via signed token (`/settings/email`)
+  * Account deletion (`/settings/user`)
+
+### Admin / Store Management (Admins Only)
+* Role-based access control:
+  * `admin` flag on users, protected from updates (`attr_readonly`)
+  * `admin_access_only` authorization guard
+* Admin dashboards under `/store`:
+  * Products CRUD (`/store/products`)
+  * Users management (`/store/users`)
+  * Wishlists viewer + filtering by user/product (`/store/wishlists`)
+  * Subscribers viewer + filtering by product (`/store/subscribers`)
+* Store sidebar navigation visible only to admins
+
+### Wishlists
+* Wishlists CRUD (`/wishlists`) owned by users
+* Shareable wishlist URLs (friendly `to_param`)
+* Add products to wishlists from product page
+  * auto-creates default wishlist if user has none
+* Manage wishlist items:
+  * remove product from wishlist
+  * move product between wishlists
+* “Copy to clipboard” share button using Stimulus
+
+### Quality, Tooling, and Ops
+* Tests:
+  * sign up, settings, email confirmations, admin access controls
+  * wishlists + wishlist products flows + permissions
+  * mailers and inventory notification behavior
+* Lint + security: RuboCop + Brakeman
+* CI: GitHub Actions (lint/security/tests)
+* Deployment notes: Kamal + Solid Queue + Docker-based setup
+
 
 ---
 
